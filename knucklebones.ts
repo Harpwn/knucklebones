@@ -12,13 +12,18 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
   }
 
   public setup(gamedatas: KnucklebonesGamedatas) {
+    this.sounds.load('dice_roll', 'rollDie');
+
     console.log("Starting game setup");
     console.log("gamedatas", gamedatas);
 
     // Example to add a div on the game area
     this.getGameAreaElement().insertAdjacentHTML(
       "beforeend",
-      `<div id="main-game-area"></div>`
+      `<div>
+        <div id="main-game-area"></div>
+        <span id="cotl-game-logo"/>
+      </div>`
     );
 
     // get player and enemy
@@ -98,7 +103,7 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
 
     await this.addDiceToBoard(playerid, col, dice_val);
     this.setColScore(playerid, col, player_score_col);
-    this.scoreCtrl[playerid].toValue(player_score_total);
+    this.setTotalScore(playerid, player_score_total);
   }
 
   public async notif_loseDice(args) {
@@ -112,7 +117,7 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
     await this.removeDiceFromBoard(playerid, col, dice_val);
 
     this.setColScore(playerid, col, player_score_col);
-    this.scoreCtrl[playerid].toValue(player_score_total);
+    this.setTotalScore(playerid, player_score_total);
   }
 
   public async notif_rollDice(args) {
@@ -134,26 +139,27 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
         <div id="player-area-${player.id}" class="${
       isPlayer ? "my-player-area" : "enemy-player-area"
     } player-area"}">
-          ${isPlayer ? `<h1 class="player-area-title">${player.name}</h1>` : ""}
-          <div id="dice_${player.id}" class="player-area-dice dice"></div>
-          <div class="player-area-inner">`;
+        <div class="player-area-overview">
+          <h1 class="player-area-title">${player.name}</h1>
+          <h1 class="player-area-score">${player.score}</h1>
+          <div class="player-area-dice-tray">
+            <div class="player-area-dice dice">
+            </div>
+          </div>
+        </div>
+      <div class="player-area-inner">`;
 
     for (var i = 1; i <= 3; i++) {
       playerBoardArea += `
         <div id="${
           player.id
-        }_${i}" class="player-area-col"><div class="player-area-col-title">${
-        colScores[i]
-      }</div>
+        }_${i}" class="player-area-col"><h1 class="player-area-col-title">${colScores[i]}</h1>
           ${this.setupCols(gamedatas, player, i)}
         </div>`;
     }
 
     playerBoardArea += `
           </div>
-          ${
-            !isPlayer ? `<h1 class="player-area-title">${player.name}</h1>` : ""
-          }
         </div>`;
 
     document
@@ -174,10 +180,22 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
         (x) => x.col == col && x.row == row && x.player == player.id
       );
       const diceValue = cell.dice_value;
+
       if (diceValue) {
+        const countForVal = gamedatas.board.filter(
+          (x) =>
+            x.col == col && x.player == player.id && x.dice_value == diceValue
+        );
+        const multiplier =
+          countForVal.length > 2
+            ? "dice-3x"
+            : countForVal.length > 1
+            ? "dice-2x"
+            : "";
+
         colBoardArea += `
             <div data-value="${diceValue}" id="${player.id}_${col}_${row}" class="player-area-row">
-              <span class="dice dice-${diceValue}"></span>
+              <span class="dice dice-${diceValue} ${multiplier}"></span>
             </div>`;
       } else {
         colBoardArea += `
@@ -195,12 +213,15 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
     col: number,
     dice_val: number
   ) {
+    const colEle = document.getElementById(`${player_id}_${col}`);
     // Find empty row in the column
-    const emptyRow = document
-      .getElementById(`${player_id}_${col}`)
-      .querySelectorAll(`.player-area-row[data-value="0"]`)[0];
+    const emptyRow = colEle.querySelectorAll(
+      `.player-area-row[data-value="0"]`
+    )[0];
 
     const newDiceId = `dice_${emptyRow.id}}`;
+
+    const diceEle = document.getElementById(`player-area-${player_id}`).querySelector(".player-area-dice-tray .dice");
 
     //set empty row data value
     emptyRow.setAttribute("data-value", dice_val.toString());
@@ -209,10 +230,13 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
       "beforeend",
       `<span class="mobile-dice dice dice-${dice_val}" id="${newDiceId}"></span>`
     );
-    this.placeOnObject(newDiceId, `dice_${player_id}`);
+    this.placeOnObject(newDiceId, diceEle);
+    this.fadeOutAndDestroy(diceEle, 10);
 
     const anim = this.slideToObject(newDiceId, emptyRow);
     await this.bgaPlayDojoAnimation(anim);
+
+    this.setMultiplierEffect(col, dice_val, player_id);
   }
 
   private async removeDiceFromBoard(
@@ -238,10 +262,18 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
       .querySelector(".player-area-col-title").textContent = score.toString();
   }
 
+  private setTotalScore(player_id: string, score: number) {
+    this.scoreCtrl[player_id].toValue(score);
+    const playerArea = document.getElementById(`player-area-${player_id}`);
+    playerArea.querySelector(".player-area-score").textContent = score.toString();
+  }
+
   private setDiceRoll(player_id: string, roll: number) {
-    document.getElementById(
-      `dice_${player_id}`
-    ).classList.value = `player-area-dice dice dice-${roll}`;
+    //dice roll anim
+    this.sounds.play("dice_roll");
+
+    document.getElementById(`player-area-${player_id}`).querySelector(".player-area-dice-tray")
+    .innerHTML = `<div class="player-area-dice dice dice-${roll}"></div>`;
   }
 
   private onPlaceDice(evt: MouseEvent) {
@@ -269,6 +301,25 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
 
     this.bgaPerformAction("actPlaceDice", {
       col,
+    });
+  }
+
+  private setMultiplierEffect(
+    col: number,
+    dice_val: number,
+    player_Id: string
+  ) {
+    const colEle = document.getElementById(`${player_Id}_${col}`);
+    const matchingDiceInRow = colEle.querySelectorAll(
+      `.player-area-row[data-value="${dice_val}"] .dice`
+    );
+    matchingDiceInRow.forEach((dice) => {
+      dice.classList.remove("dice-2x", "dice-3x");
+      if (matchingDiceInRow.length > 1) {
+        dice.classList.add(
+          matchingDiceInRow.length > 2 ? "dice-3x" : "dice-2x"
+        );
+      }
     });
   }
 }
