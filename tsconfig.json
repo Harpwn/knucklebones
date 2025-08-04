@@ -1,0 +1,16 @@
+{
+    "rootDir": ".", 
+    "compilerOptions": {
+      "target": "es5",
+      "module": "none",
+      "lib": ["dom", "esnext"],  
+      "sourceMap": false,
+      "outFile": "knucklebones.js",
+    },
+    "files": [
+        "bga-framework.d.ts",
+        "knucklebones.d.ts",
+        "knucklebones.ts",
+        "define.ts"
+    ]
+}

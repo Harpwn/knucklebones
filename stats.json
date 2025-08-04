@@ -1,0 +1,24 @@
+{
+    "player": {
+        "col-1-score": {
+            "id": 10,
+            "name": "Score total from dice in col 1",
+            "type": "int"
+        },
+        "col-2-score": {
+            "id": 11,
+            "name": "Score total from dice in col 2",
+            "type": "int"
+        },
+        "col-3-score": {
+            "id": 12,
+            "name": "Score total from dice in col 3",
+            "type": "int"
+        },
+        "dice-val": {
+            "id": 13,
+            "name": "Current Dice Roll",
+            "type": "int"
+        }
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "knucklebones",
+  "version": "1.0.0",
+  "description": "",
+  "main": "knucklebones.js",
+  "scripts": {
+    "build:ts": "tsc",
+    "build:scss": "sass --no-source-map knucklebones.scss knucklebones.css",
+    "watch:ts": "tsc --watch",
+    "watch:scss": "sass --watch src/knucklebones.scss knucklebones.css",
+    "watch": "npm run watch:ts && npm run watch:scss",
+    "build": "npm run build:ts && npm run build:scss"
+  },
+  "author": "Harry B",
+  "license": "MIT",
+  "devDependencies": {
+    "sass": "^1.32.6",
+    "typescript": "^4.1.3"
+  }
+}
