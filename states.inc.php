@@ -75,6 +75,7 @@ $machinestates = [
     
     ST_NEXT_PLAYER => GameStateBuilder::create()
         ->name('nextPlayer')
+        ->description('')
         ->type(StateType::GAME)
         ->action('stNextPlayer')
         ->updateGameProgression(true)
