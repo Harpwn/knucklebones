@@ -1,32 +1,39 @@
   @use 'variables' as v;
 
 
-  #main-game-area {
+  #game-area-container {
       background-color: black;
+      display: flex;
+      flex-direction: column;
+      background-image: url(img/background.png);
+      background-repeat: repeat-y;
+      background-position: center;
+      background-size: 50%;
+      padding: 50px;
+      width: 800px;
   }
 
-  #cotl-game-logo {
-      background: url("img/logo.png");
-      height: 85px;
-      width: 200px;
-      position: absolute;
-      background-size: 100%;
+  #game-area-divider {
+      height: 50px;
+      width: 100%;
+      background-color: black;
+      background-image: url("img/logo.png");
+      background-position-x: 50%;
+      background-size: contain;
       background-repeat: no-repeat;
-      right: 0;
-      bottom: 0;
-      margin-right: 5px;
+      box-shadow: 0px 2px 10px 10px;
   }
 
   .player-area {
-      width: 100%;
-      height: 350px;
-      background-color: rgba(0, 0, 0, 0.2);
+      display: flex;
 
       &.enemy-player-area {
+          flex-direction: row-reverse;
+          margin-bottom: 10px;
+
           .player-area-overview {
-              right: 0;
               flex-direction: column-reverse;
-              height: 45%;
+              align-items: end;
           }
 
           .player-area-inner {
@@ -47,7 +54,7 @@
       }
 
       &.my-player-area {
-          border-top: 75px solid black;
+          margin-top: 10px;
 
           .player-area-inner {
               align-items: start;
@@ -65,22 +72,40 @@
       .player-area-overview {
           display: flex;
           flex-direction: column;
-          position: absolute;
-          height: 100%;
           width: 33%;
-          align-items: center;
-          ;
 
-          .player-area-title {
+          .player-area-text {
               font-weight: bold;
               color: white;
               text-align: center;
-          }
+              width: 200px;
+              margin: 5px;
 
-          .player-area-score {
-              font-weight: bold;
-              color: white;
-              text-align: center;
+              &.player-area-title {
+                  &::after {
+                      margin-left: 5px;
+                      content: "";
+                      background-image: url(img/text-right-decor.png);
+                      display: inline-block;
+                      background-repeat: no-repeat;
+                      width: 30px;
+                      height: 15px;
+                      background-size: contain;
+                      background-position-y: 3px
+                  }
+
+                  &::before {
+                      margin-right: 5px;
+                      content: "";
+                      background-image: url(img/text-left-decor.png);
+                      display: inline-block;
+                      background-repeat: no-repeat;
+                      width: 30px;
+                      height: 15px;
+                      background-size: contain;
+                      background-position-y: 3px
+                  }
+              }
           }
 
           .player-area-dice-tray {
@@ -99,10 +124,7 @@
       }
 
       .player-area-inner {
-          background-color: rgba(255, 255, 255, 0.5);
-          height: 100%;
-          width: 300px;
-          margin: auto;
+          width: 34%;
           display: flex;
 
           .player-area-col {
@@ -112,8 +134,11 @@
               height: 225px;
 
               &.possible-move {
-                  background-color: rgba(255,0,0,0.6);
                   cursor: pointer;
+
+                  .player-area-row {
+                      background-color: rgba(255, 0, 0, 0.7);
+                  }
               }
 
 

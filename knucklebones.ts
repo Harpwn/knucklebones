@@ -20,9 +20,7 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
     // Example to add a div on the game area
     this.getGameAreaElement().insertAdjacentHTML(
       "beforeend",
-      `<div>
-        <div id="main-game-area"></div>
-        <span id="cotl-game-logo"/>
+      `<div id="game-area-container">
       </div>`
     );
 
@@ -33,6 +31,9 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
     );
 
     this.setupPlayerBoard(gamedatas, enemy);
+    document
+      .getElementById("game-area-container")
+      .insertAdjacentHTML("beforeend", `<div id="game-area-divider"></div>`);
     this.setupPlayerBoard(gamedatas, player);
 
     document
@@ -140,8 +141,8 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
       isPlayer ? "my-player-area" : "enemy-player-area"
     } player-area"}">
         <div class="player-area-overview">
-          <h1 class="player-area-title">${player.name}</h1>
-          <h1 class="player-area-score">${player.score}</h1>
+          <span class="player-area-text player-area-title">${player.name}</span>
+          <span class="player-area-text player-area-score">${player.score}</span>
           <div class="player-area-dice-tray">
             <div class="player-area-dice dice">
             </div>
@@ -163,7 +164,7 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
         </div>`;
 
     document
-      .getElementById("main-game-area")
+      .getElementById("game-area-container")
       .insertAdjacentHTML("beforeend", playerBoardArea);
 
     this.setDiceRoll(player.id, gamedatas.roll);
