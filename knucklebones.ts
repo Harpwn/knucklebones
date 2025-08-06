@@ -141,6 +141,7 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
       isPlayer ? "my-player-area" : "enemy-player-area"
     } player-area"}">
         <div class="player-area-overview">
+          <span class="player-character"></span>
           <span class="player-area-text player-area-title">${player.name}</span>
           <span class="player-area-text player-area-score">${player.score}</span>
           <div class="player-area-dice-tray">
@@ -148,7 +149,8 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
             </div>
           </div>
         </div>
-      <div class="player-area-inner">`;
+      <div class="player-area-inner">
+        <div class="player-area-col-container">`;
 
     for (var i = 1; i <= 3; i++) {
       playerBoardArea += `
@@ -160,6 +162,7 @@ class Knucklebones extends GameGui<KnucklebonesGamedatas> {
     }
 
     playerBoardArea += `
+            </div>
           </div>
         </div>`;
 
