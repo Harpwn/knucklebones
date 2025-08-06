@@ -10,7 +10,6 @@
       background-position: center;
       background-size: 50%;
       padding: 50px;
-      min-width: 850px;
   }
 
   #game-area-divider {
@@ -40,8 +39,8 @@
               }
           }
 
-          .player-area-col-container {
-              align-items: end;
+          .player-area-inner {
+              align-content: end;
           }
 
           .player-area-col-title {
@@ -66,8 +65,8 @@
               }
           }
 
-          .player-area-col-container {
-              align-items: start;
+          .player-area-inner {
+              align-content: start;
           }
 
           .player-area-row {
@@ -159,7 +158,7 @@
                       cursor: pointer;
 
                       .player-area-row {
-                          background-color: rgba(150, 0, 0)
+                          background-color: rgba(150, 0, 0, 0.6)
                       }
                   }
 
@@ -167,12 +166,11 @@
                   .player-area-row {
                       height: 60px;
                       width: 85%;
-                      background: v.$black;
+                      background-color: v.$black-transparent;
                       margin: auto;
                       margin-bottom: 3px;
                       align-content: center;
                       pointer-events: none;
-                      opacity: 0.7;
 
                       .dice {
                           display: block;
